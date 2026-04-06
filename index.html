@@ -51,8 +51,8 @@
             <div class="absolute -right-4 -top-4 w-16 h-16 bg-blue-500 rounded-full blur-3xl opacity-30"></div>
         </div>
         <nav class="flex-1 p-4 space-y-3 overflow-y-auto">
-            <button onclick="T('t1', this)" class="w-full text-left px-4 py-3 rounded-xl bg-gradient-to-r from-blue-600/80 to-indigo-600/80 text-white font-medium menu-btn shadow-lg shadow-blue-900/40 transition-all font-heading">1. Hoán vị (Permutation)</button>
-            <button onclick="T('t2', this)" class="w-full text-left px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800/50 menu-btn transition-all font-heading">2. Lũy thừa Modulo</button>
+            <button onclick="T('t1', this)" class="w-full text-left px-4 py-3 rounded-xl bg-gradient-to-r from-blue-600/80 to-indigo-600/80 text-white font-medium menu-btn shadow-lg shadow-blue-900/40 transition-all font-heading">1. Mã hóa cổ điển</button>
+            <button onclick="T('t2', this)" class="w-full text-left px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800/50 menu-btn transition-all font-heading">2. Modulo (10 Thuật Toán)</button>
             <button onclick="T('t4', this)" class="w-full text-left px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800/50 menu-btn transition-all font-heading">3. Mã hóa AES-128</button>
             <button onclick="T('t6', this)" class="w-full text-left px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800/50 menu-btn transition-all font-heading">4. Mã hóa Bất đối xứng</button>
         </nav>
@@ -61,34 +61,53 @@
     <!-- Main Content -->
     <div class="flex-1 overflow-y-auto relative p-6 md:p-10">
         <div id="t1" class="tab-content max-w-6xl mx-auto fade-in">
-            <h2 class="text-3xl font-bold font-heading mb-6 flex items-center gap-3"><span class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm">01</span> Mã hóa Hoán vị Cột</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                <div class="lg:col-span-1 glass-panel p-6 rounded-2xl h-fit text-sm">
-                    <label class="block mb-2 font-semibold text-slate-300">Bản rõ:</label>
-                    <input id="p1-text" class="w-full p-2.5 rounded-lg glass-input mb-5" value="">
-                    <label class="block mb-2 font-semibold text-slate-300">Khóa (VD: 3,1,4,2):</label>
-                    <input id="p1-key" class="w-full p-2.5 rounded-lg glass-input mb-5" value="">
-                    <label class="block mb-2 font-semibold text-slate-300">Ký tự đệm:</label>
-                    <input id="p1-pad" class="w-full p-2.5 rounded-lg glass-input mb-6" value="">
-                    <button onclick="runP1()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white p-3 rounded-lg font-heading font-bold shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5">MÃ HÓA NGAY</button>
+            <h2 class="text-3xl font-bold font-heading mb-6 flex items-center gap-3"><span class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm">01</span> Thay thế & Hoán vị (Cổ điển)</h2>
+            <div class="grid grid-cols-1 xl:grid-cols-4 gap-8">
+                <div class="xl:col-span-1 glass-panel p-6 rounded-2xl h-fit text-sm">
+                    <label class="block mb-2 font-semibold text-slate-300">Chuỗi (M):</label>
+                    <textarea id="p1-text" class="w-full p-3 rounded-lg glass-input mb-5 resize-none h-24" placeholder="Nhập vào Bản rõ hoặc Bản mã..."></textarea>
+                    <label class="block mb-2 font-semibold text-slate-300">Khóa (K):</label>
+                    <div class="text-[10px] text-slate-400 mb-2 leading-relaxed tracking-wide">
+                        • Số nguyên: <span class="text-blue-300">Caesar</span><br>
+                        • Chữ cái: <span class="text-purple-300">Vigenere / Playfair</span><br>
+                        • 26 Chữ cái: <span class="text-orange-300">Monoalphabetic</span><br>
+                        • Số phẩy (VD: 3,1,2): <span class="text-green-300">Permutation</span>
+                    </div>
+                    <input id="p1-key" class="w-full p-2.5 rounded-lg glass-input mb-6" placeholder="Nhập K để tự nhận dạng..." value="">
+                    <div class="flex gap-3">
+                        <button onclick="runClassic('enc')" class="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white py-3 rounded-lg font-heading font-bold shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5 text-xs">MÃ HÓA</button>
+                        <button onclick="runClassic('dec')" class="flex-1 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white py-3 rounded-lg font-heading font-bold shadow-lg shadow-rose-500/30 transition transform hover:-translate-y-0.5 text-xs">GIẢI MÃ</button>
+                    </div>
                 </div>
-                <div class="lg:col-span-3 glass-panel p-6 rounded-2xl min-h-[400px]" id="o1"></div>
+                <div class="xl:col-span-3 glass-panel p-6 rounded-2xl min-h-[400px] h-[70vh] overflow-y-auto" id="o1"></div>
             </div>
         </div>
 
         <div id="t2" class="tab-content hidden-tab max-w-6xl mx-auto fade-in">
-            <h2 class="text-3xl font-bold font-heading mb-6 flex items-center gap-3"><span class="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center text-sm">02</span> Phép tính Lũy thừa Modulo</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                <div class="lg:col-span-1 glass-panel p-6 rounded-2xl h-fit text-sm">
-                    <label class="block mb-2 font-semibold text-slate-300">Cơ số (a):</label>
-                    <input type="number" id="p2-a" class="w-full p-2.5 rounded-lg glass-input mb-5" value="">
-                    <label class="block mb-2 font-semibold text-slate-300">Số mũ (m):</label>
-                    <input type="number" id="p2-m" class="w-full p-2.5 rounded-lg glass-input mb-5" value="">
-                    <label class="block mb-2 font-semibold text-slate-300">Modulo (n):</label>
-                    <input type="number" id="p2-n" class="w-full p-2.5 rounded-lg glass-input mb-6" value="">
-                    <button onclick="runP2()" class="w-full bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-400 hover:to-emerald-500 text-white p-3 rounded-lg font-heading font-bold shadow-lg shadow-teal-500/30 transition transform hover:-translate-y-0.5">TÍNH TOÁN NGAY</button>
+            <h2 class="text-3xl font-bold font-heading mb-6 flex items-center gap-3"><span class="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center text-sm">02</span> Các Thuật Toán Modulo</h2>
+            <div class="grid grid-cols-1 xl:grid-cols-4 gap-8">
+                <div class="xl:col-span-1 glass-panel p-6 rounded-2xl h-fit text-sm">
+                    <label class="block mb-2 font-semibold text-slate-300">Chọn Công Cụ:</label>
+                    <select id="t2-mode" onchange="T2_ChangeMode()" class="w-full p-2.5 rounded-lg glass-input mb-5 bg-slate-800 text-teal-300 font-bold focus:ring-teal-500 outline-none">
+                        <option value="1">1. Lũy thừa modulo (a^m mod n)</option>
+                        <option value="2">2. Tìm nghịch đảo modulo</option>
+                        <option value="3">3. Lũy thừa theo định lý Fermat</option>
+                        <option value="4">4. Tính hàm Euler φ(n)</option>
+                        <option value="5">5. Lũy thừa theo định lý Euler</option>
+                        <option value="6">6. Lũy thừa định lý dư Trung Hoa (CRT)</option>
+                        <option value="7">7. Giải hệ PT đồng dư (CRT)</option>
+                        <option value="8">8. Kiểm tra Căn nguyên thủy</option>
+                        <option value="9">9. Tính Logarithm rời rạc</option>
+                        <option value="10">10. Biểu thức Modulo hỗn hợp</option>
+                    </select>
+                    
+                    <div id="t2-inputs" class="space-y-4"></div>
+                    
+                    <button onclick="runP2()" class="w-full mt-6 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-400 hover:to-emerald-500 text-white p-3 rounded-lg font-heading font-bold shadow-lg shadow-teal-500/30 transition transform hover:-translate-y-0.5">TÍNH TOÁN NGAY</button>
                 </div>
-                <div class="lg:col-span-3 glass-panel p-6 rounded-2xl min-h-[400px]" id="o2"></div>
+                <div class="xl:col-span-3 glass-panel p-6 rounded-2xl min-h-[400px] h-[70vh] overflow-y-auto" id="o2">
+                    <div class="flex items-center justify-center h-full text-slate-500 font-mono text-sm">Vui lòng chọn công cụ và bấm TÍNH TOÁN.</div>
+                </div>
             </div>
         </div>
 
@@ -97,12 +116,19 @@
             <div class="grid grid-cols-1 xl:grid-cols-4 gap-8">
                 <div class="xl:col-span-1 glass-panel p-6 rounded-2xl h-fit text-sm">
                     <label class="block mb-2 font-semibold text-slate-300">Plaintext (32 HEX):</label>
-                    <textarea id="p4-pt" class="w-full p-3 rounded-lg glass-input font-mono text-xs mb-5 resize-none h-20 placeholder-slate-600"></textarea>
+                    <textarea id="p4-pt" class="w-full p-3 rounded-lg glass-input font-mono text-xs mb-5 resize-none h-20 placeholder-slate-600">BC3034B5D3677672E290C28DC16922FB</textarea>
                     <label class="block mb-2 font-semibold text-slate-300">Key (32 HEX):</label>
-                    <textarea id="p4-key" class="w-full p-3 rounded-lg glass-input font-mono text-xs mb-6 resize-none h-20 placeholder-slate-600"></textarea>
-                    <button onclick="runP4()" class="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 text-white p-3 rounded-lg font-heading font-bold shadow-lg shadow-violet-500/30 border border-violet-400/30">MÃ HÓA AES</button>
+                    <textarea id="p4-key" class="w-full p-3 rounded-lg glass-input font-mono text-xs mb-6 resize-none h-20 placeholder-slate-600">AADE12F39F579A5A49845A7797FE9146</textarea>
+                    <button onclick="runAES()" class="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 text-white p-3 rounded-lg font-heading font-bold shadow-lg shadow-violet-500/30 border border-violet-400/30">MÃ HÓA AES</button>
                 </div>
-                <div class="xl:col-span-3 glass-panel p-6 rounded-2xl h-[70vh] overflow-y-auto" id="o4"></div>
+                <div class="xl:col-span-3 h-[70vh] overflow-y-auto space-y-6">
+                    <div class="glass-panel p-6 rounded-2xl" id="aes-o-key">
+                        <div class="flex items-center justify-center h-full text-slate-500 font-mono text-sm min-h-[100px]">Khối 1: Lịch sử Sinh Khóa (Key Expansion)</div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl" id="aes-o-enc">
+                        <div class="flex items-center justify-center h-full text-slate-500 font-mono text-sm min-h-[100px]">Khối 2: Lịch sử Mã hóa (Encryption Rounds)</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -204,45 +230,306 @@
             mat: m => `<div class="inline-grid grid-cols-4 gap-1 p-3 bg-slate-900/80 border border-slate-700 rounded-xl mx-2 align-top mt-2 shadow-inner">` + m.map(row => row.map(v => `<div class="w-9 h-9 flex items-center justify-center rounded bg-slate-800/80 font-mono text-[13px] text-teal-300 border border-slate-700/50 hover:bg-slate-700">${UI.hex(v)}</div>`).join('')).join('') + `</div>`
         };
 
-        function runP1() {
-            let pt = document.getElementById('p1-text').value.replace(/\s+/g, ''); let ks = document.getElementById('p1-key').value.trim();
-            if(!pt || !ks) return document.getElementById('o1').innerHTML = UI.err("Vui lòng điền đủ.");
-            let keyStr = ks.split(',').map(s => parseInt(s.trim())); let pad = document.getElementById('p1-pad').value || 'X';
-            if(keyStr.some(isNaN)) return document.getElementById('o1').innerHTML = UI.err("Khóa không hợp lệ.");
-            let n = keyStr.length, padLen = (n - (pt.length % n)) % n, pText = pt + pad.repeat(padLen), rows = pText.length / n;
-            let m = []; for(let i=0; i<rows; i++) m.push(pText.substr(i*n, n).split(''));
-            let tbl = `<table class="border-collapse border border-slate-600 text-center mb-4"><tr class="bg-indigo-900/40 text-xs">`;
-            for(let c=0; c<n; c++) tbl += `<th class="border border-slate-700 p-3">Col ${c+1}<br><span class="text-rose-400 block mt-1">K:${keyStr[c]}</span></th>`;
-            tbl += `</tr>`; for(let r=0; r<rows; r++) { tbl += `<tr>`; for(let c=0; c<n; c++) tbl += `<td class="border border-slate-700 p-2 font-mono text-emerald-300">${m[r][c]}</td>`; tbl += `</tr>`; } tbl += `</table>`;
-            let order = keyStr.map((val, idx) => ({val, idx})).sort((a,b) => a.val - b.val);
-            let cipher = ""; for(let o of order) for(let r=0; r<rows; r++) cipher += m[r][o.idx];
-            document.getElementById('o1').innerHTML = UI.card("1. Chuỗi", `Bản rõ: ${pText}`) + UI.card("2. Ma Trận", tbl) + UI.card("3. Bản mã", `<div class="bg-slate-900 border p-4 text-emerald-400 font-mono text-xl">${cipher}</div>`);
+        function runClassic(mode = 'dec') {
+            let M = document.getElementById('p1-text').value.trim();
+            let K = document.getElementById('p1-key').value.trim();
+            let O = document.getElementById('o1');
+            if(!M || !K) return O.innerHTML = UI.err("Vui lòng nhập Chuỗi M và Khóa K.");
+            
+            let detected = detectCipher(K);
+            if(detected.length === 0) return O.innerHTML = UI.err("Không nhận dạng được loại khóa. Hãy nhập Khóa K ở định dạng số, chuỗi chữ cái hoặc số phẩy (vd: 3,1,4,2).");
+            
+            let html = UI.card("Nhận dạng tự động", `Hệ thống đã nhận dạng Khóa K phù hợp với: <b class="text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]">${detected.map(d => formatCipherName(d)).join(' / ')}</b>`);
+            
+            let htmlRes = `<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">`;
+            for(let cipher of detected) {
+                let result = processCipher(cipher, M, K, mode);
+                htmlRes += `
+                <div class="bg-slate-800/60 border border-slate-700 rounded-xl overflow-hidden shadow-lg fade-in flex flex-col">
+                    <div class="bg-gradient-to-r ${mode === 'enc' ? 'from-blue-900/50 to-indigo-900/50 border-b border-blue-500/30 text-blue-300' : 'from-rose-900/50 to-pink-900/50 border-b border-rose-500/30 text-rose-300'} px-4 py-3 font-heading font-bold flex justify-between items-center text-sm shadow-inner">
+                        ${formatCipherName(cipher)}
+                        <span class="text-[10px] uppercase tracking-widest bg-slate-900/50 px-2 py-0.5 rounded-full ring-1 ring-white/10">${mode === 'enc' ? 'Mã Hóa' : 'Giải Mã'}</span>
+                    </div>
+                    <div class="p-5 flex-1 relative min-h-[100px] flex items-center justify-center">
+                        <div class="font-mono text-xl md:text-2xl break-all selection:bg-slate-700 font-bold ${mode === 'enc' ? 'text-indigo-400' : 'text-emerald-400'}" style="word-break: break-all; white-space: pre-wrap;">${result || '<span class="opacity-30 font-normal text-base text-slate-400"><i>(Dữ liệu xử lý trống)</i></span>'}</div>
+                    </div>
+                </div>`;
+            }
+            htmlRes += `</div>`;
+            O.innerHTML = html + htmlRes;
         }
 
+        function formatCipherName(c) {
+            const map = { 'caesar': 'Caesar (Dịch Vòng)', 'permutation': 'Hoán Vị Cột', 'monoalphabetic': 'Chữ Đơn Monoalphabetic', 'vigenere_rep': 'Vigenere Lặp Khóa', 'vigenere_auto': 'Vigenere Autokey', 'playfair': 'Playfair' };
+            return map[c] || c;
+        }
+
+        function detectCipher(keyStr) {
+            let k = keyStr.trim().toUpperCase();
+            if (/^-?\d+$/.test(k)) return ["caesar"];
+            if (/^(\d+\s*,\s*)+\d+$/.test(k)) return ["permutation"];
+            let alpha = k.replace(/[^A-Z]/g, '');
+            if (alpha.length === 26 && new Set(alpha).size === 26) return ["monoalphabetic"];
+            if (alpha.length > 0) return ["vigenere_rep", "vigenere_auto", "playfair"];
+            return [];
+        }
+
+        function getA(c) { return c.charCodeAt(0) - 65; }
+        function fromA(x) { return String.fromCharCode((x%26 + 26)%26 + 65); }
+        function processCipher(cipher, text, key, mode) {
+            let T = text.toUpperCase().replace(/[^A-Z]/g, '');
+            let K = key.toUpperCase().replace(/[^A-Z0-9,-]/g, '');
+            let res = ""; let dec = mode === 'dec';
+
+            if (cipher === 'caesar') {
+                let shift = parseInt(key, 10); if (dec) shift = -shift;
+                for(let char of T) { let code = char.charCodeAt(0); if(code >= 65 && code <= 90) res += fromA(code - 65 + shift); }
+            } 
+            else if (cipher === 'permutation') {
+                let kArr = key.split(',').map(x=>parseInt(x.trim()));
+                let order = kArr.map((val, idx) => ({val, idx})).sort((a,b) => a.val - b.val);
+                let colCount = kArr.length; let textLen = T.length;
+                if(!dec) {
+                    let padLen = (colCount - (textLen % colCount)) % colCount;
+                    let padded = T + 'X'.repeat(padLen);
+                    let rows = padded.length / colCount;
+                    for(let o of order) for(let r=0; r<rows; r++) res += padded[r * colCount + o.idx];
+                } else {
+                    let fullRows = Math.floor(textLen / colCount);
+                    let extra = textLen % colCount;
+                    let cols = []; let cPos = 0;
+                    for(let i=0; i<colCount; i++) {
+                        let originalIndex = order[i].idx;
+                        let cLen = fullRows + (originalIndex < extra ? 1 : 0);
+                        cols[originalIndex] = T.substr(cPos, cLen); cPos += cLen;
+                    }
+                    let rows = Math.ceil(textLen / colCount);
+                    for(let r=0; r<rows; r++) {
+                        for(let c=0; c<colCount; c++) {
+                            if (r < cols[c].length) res += cols[c][r];
+                        }
+                    }
+                }
+            }
+            else if (cipher === 'monoalphabetic') {
+                let alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                let kClean = K.replace(/[^A-Z]/g, '');
+                for(let char of T) {
+                    let idx = dec ? kClean.indexOf(char) : alpha.indexOf(char);
+                    if (idx !== -1) res += dec ? alpha[idx] : kClean[idx];
+                }
+            }
+            else if (cipher === 'vigenere_rep') {
+                let kClean = K.replace(/[^A-Z]/g, '');
+                let kLen = kClean.length;
+                for(let i=0; i<T.length; i++) {
+                    let c = getA(T[i]); let k = getA(kClean[i % kLen]);
+                    res += fromA(dec ? c - k : c + k);
+                }
+            }
+            else if (cipher === 'vigenere_auto') {
+                let kClean = K.replace(/[^A-Z]/g, '');
+                let currentK = kClean;
+                for(let i=0; i<T.length; i++) {
+                    let c = getA(T[i]); let k = getA(currentK[i]);
+                    let pOut = dec ? c - k : c + k;
+                    let actualChar = fromA(pOut);
+                    res += actualChar;
+                    currentK += dec ? actualChar : T[i];
+                }
+            }
+            else if (cipher === 'playfair') {
+                let mat = []; let seen = new Set(); let alpha = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+                let kClean = K.replace(/[^A-Z]/g, '').replace(/J/g, 'I');
+                for(let char of kClean + alpha) { if(!seen.has(char)) { mat.push(char); seen.add(char); } }
+                
+                let pt = [];
+                if(!dec) {
+                    let TClean = T.replace(/J/g, 'I');
+                    for(let i=0; i<TClean.length; i++) {
+                        pt.push(TClean[i]);
+                        if(i+1 < TClean.length && TClean[i] === TClean[i+1]) { pt.push('X'); }
+                    }
+                    if(pt.length % 2 !== 0) pt.push('X');
+                } else {
+                    pt = T.split('');
+                }
+
+                let getPos = (ch) => { let idx = mat.indexOf(ch); return {r: Math.floor(idx/5), c: idx%5}; };
+                let getCh = (r, c) => mat[(r+5)%5 * 5 + (c+5)%5];
+
+                for(let i=0; i<pt.length-1; i+=2) {
+                    let p1 = getPos(pt[i]), p2 = getPos(pt[i+1]);
+                    if (!p1 || !p2) continue;
+                    if (p1.r === p2.r) {
+                        res += getCh(p1.r, p1.c + (dec?-1:1)) + getCh(p2.r, p2.c + (dec?-1:1));
+                    } else if (p1.c === p2.c) {
+                        res += getCh(p1.r + (dec?-1:1), p1.c) + getCh(p2.r + (dec?-1:1), p2.c);
+                    } else {
+                        res += getCh(p1.r, p2.c) + getCh(p2.r, p1.c);
+                    }
+                }
+            }
+            return res;
+        }
+
+        const INP = (id, lbl, pl, val="") => `<label class="block mb-1 font-semibold text-slate-300 text-xs mt-3">${lbl}</label><input type="text" id="${id}" class="w-full p-2.5 rounded-lg glass-input font-mono" placeholder="${pl}" value="${val}">`;
+        function T2_ChangeMode() {
+            let m = document.getElementById('t2-mode').value; let h = "";
+            if(m==="1"||m==="3"||m==="5"||m==="6") h = INP('t2-a','Cơ số a','VD: 101','')+INP('t2-m','Số mũ m (hoặc k)','VD: 76','')+INP('t2-n','Modulo n','VD: 49913','');
+            else if(m==="2"||m==="8") h = INP('t2-a','Số a','VD: 2705','')+INP('t2-n','Modulo n','VD: 6577','');
+            else if(m==="4") h = INP('t2-n','Số cần phân tích n','VD: 2863','');
+            else if(m==="7") h = INP('t2-a','Các phần dư a_i (cách nhau dấu ,)','VD: 6, 2, 4','')+INP('t2-m','Các modulo m_i (cách nhau dấu ,)','VD: 11, 13, 17','');
+            else if(m==="9") h = INP('t2-a','Cơ số a','VD: 3','')+INP('t2-b','Kết quả b','VD: 8','')+INP('t2-n','Modulo nguyên tố n','VD: 19','');
+            else if(m==="10") h = INP('t2-a','Số a','83','')+INP('t2-b','Số b','17','')+INP('t2-x','Mũ x','354','')+INP('t2-y','Mũ y','314','')+INP('t2-n','Modulo n','241','');
+            document.getElementById('t2-inputs').innerHTML = h; document.getElementById('o2').innerHTML = `<div class="flex items-center justify-center h-full text-slate-500 font-mono text-sm">Vui lòng nhập dữ liệu và bấm TÍNH TOÁN.</div>`; setT2Defaults(m);
+        }
+        function setT2Defaults(m) {
+            const S = (i,v)=>document.getElementById(i).value=v;
+            if(m==="1"){S('t2-a',499);S('t2-m',6337);S('t2-n',6337);} else if(m==="2"){S('t2-a',2705);S('t2-n',6577);} else if(m==="3"){S('t2-a',281);S('t2-m',764);S('t2-n',6967);} else if(m==="4") S('t2-n',2863); else if(m==="5"){S('t2-a',27);S('t2-m',2201);S('t2-n',5400);} else if(m==="6"){S('t2-a',101);S('t2-m',76);S('t2-n',49913);} else if(m==="7"){S('t2-a','6,2,4');S('t2-m','11,13,17');} else if(m==="8"){S('t2-a',11);S('t2-n',293);} else if(m==="9"){S('t2-a',3);S('t2-b',8);S('t2-n',19);} else if(m==="10"){S('t2-a',83);S('t2-b',17);S('t2-x',354);S('t2-y',314);S('t2-n',241);}
+        }
+        document.addEventListener('DOMContentLoaded', ()=>setTimeout(T2_ChangeMode, 300));
+        
         const gcd = (a, b) => b === 0n ? a : gcd(b, a % b);
-        function phi(n) { let res = n, f = []; for(let p=2n; p*p<=n; p++){ if(n%p===0n){ f.push(p); while(n%p===0n) n/=p; res-=res/p; } } if(n>1n){ f.push(n); res-=res/n; } return {phi: res, f: f}; }
+        function modInv(a, m) { let [m0, y, x] = [m, 0n, 1n]; if (m === 1n) return 0n; while (a > 1n) { let q = a / m; let t = m; m = a % m; a = t; t = y; y = x - q * y; x = t; } if (x < 0n) x += m0; return x; }
+        const bModPow = (b, e, mod) => { let r=1n; b=(b%mod+mod)%mod; while(e>0n) { if(e%2n===1n) r=(r*b)%mod; e/=2n; b=(b*b)%mod; } return r; };
+        function pF(n) { let f=[]; for(let p=2n; p*p<=n; p++){ if(n%p===0n){ let exp=0; while(n%p===0n){n/=p; exp++;} f.push({p, exp}); } } if(n>1n) f.push({p:n, exp:1}); return f; }
+        function phi(n) { let res = n, f = pF(n); for(let {p} of f) res -= res/p; return {phi: res, f: f}; }
+
         function runP2() {
-            let iv1=document.getElementById('p2-a').value, iv2=document.getElementById('p2-m').value, iv3=document.getElementById('p2-n').value;
-            if(!iv1 || !iv2 || !iv3) return document.getElementById('o2').innerHTML = UI.err("Vui lòng điền đủ.");
-            let a = BigInt(iv1), ms = BigInt(iv2), n = BigInt(iv3), html = "", g = gcd(a, n), ph = phi(n), m_pr = ms;
-            if (g === 1n && ms >= ph.phi) { m_pr = ms % ph.phi; html += UI.card("Euler", `φ(${n}) = ${ph.phi}<br>m' = ${ms} mod ${ph.phi} = ${m_pr}`); }
-            let bin = m_pr.toString(2), bArr = bin.split('').reverse(), r=1n, base=a%n;
-            let hist = `<table class="w-full border-collapse text-sm mt-4"><tr><th class="border p-2">Bit</th><th class="border p-2">Kết quả</th></tr>`;
-            for(let i=0; i<bArr.length; i++){ if(bArr[i] === '1') r=(r*base)%n; if(i < bArr.length-1) base=(base*base)%n; hist += `<tr><td class="border p-2 text-rose-400">${bArr[i]}</td><td class="border p-2">R=${r}, B=${base}</td></tr>`; } hist += `</table>`;
-            html += UI.card("Bình Phương Nhân", hist) + `<div class="p-5 text-center text-3xl font-bold bg-blue-900 border">${r}</div>`;
-            document.getElementById('o2').innerHTML = html;
+            let m = document.getElementById('t2-mode').value; let O = document.getElementById('o2');
+            try {
+                let GV = id => { let v = document.getElementById(id); if(!v || !v.value.trim()) throw "Nhập thiếu trường dữ liệu!"; return BigInt(v.value.trim()); };
+                let GVS = id => { let v = document.getElementById(id); if(!v || !v.value.trim()) throw "Nhập thiếu trường dữ liệu!"; return v.value.trim(); };
+                if(m==="1") {
+                    let [a, exp, n] = [GV('t2-a'), GV('t2-m'), GV('t2-n')];
+                    let r = bModPow(a, exp, n), bin = exp.toString(2), bArr = bin.split('').reverse(), step=1n, base=a%n;
+                    let hist = `<table class="w-full border-collapse text-sm text-center"><tr><th class="border border-slate-700/50 p-1">Bit</th><th class="border border-slate-700/50 p-1">B (Base)</th><th class="border border-slate-700/50 p-1">R (Result)</th></tr>`;
+                    for(let i=0; i<bArr.length; i++){
+                        if(bArr[i] === '1') step=(step*base)%n;
+                        hist += `<tr><td class="border border-slate-700/50 p-1">${bArr[i]}</td><td class="border border-slate-700/50 p-1 text-slate-400">${base}</td><td class="border border-slate-700/50 p-1 text-emerald-400">${step}</td></tr>`;
+                        if(i < bArr.length-1) base=(base*base)%n;
+                    } hist += `</table>`;
+                    O.innerHTML = UI.card("1. Hạ bậc lũy thừa (Binary Exponentiation)", hist) + UI.card("Kết quả", `<div class="text-3xl text-emerald-400 font-bold">${a}<sup>${exp}</sup> mod ${n} = ${r}</div>`);
+                }
+                else if(m==="2") {
+                    let [a, n] = [GV('t2-a'), GV('t2-n')]; let m0=n, y=0n, x=1n, t_a=a, t_m=n;
+                    if (gcd(a,n) !== 1n) throw `ƯCLN(${a}, ${n}) ≠ 1. Không tồn tại nghịch đảo.`;
+                    let hist = `<table class="w-full text-center border-collapse text-sm"><tr class="bg-slate-800/80"><th>M(n)</th><th>A</th><th>Q</th><th>X(t)</th></tr>`;
+                    while(t_a > 1n) {
+                        let q = t_a / t_m; let t = t_m; t_m = t_a % t_m; t_a = t;
+                        t = y; y = x - q * y; x = t;
+                        hist += `<tr><td class="border border-slate-700/50 p-1">${t_m}</td><td class="border border-slate-700/50 p-1">${t_a}</td><td class="border border-slate-700/50 p-1 text-rose-400">${q}</td><td class="border border-slate-700/50 p-1 text-emerald-400">${x}</td></tr>`;
+                    }
+                    if(x < 0n) x += m0; hist += `</table>`;
+                    O.innerHTML = UI.card("Thuật toán Euclid mở rộng", hist) + UI.card("Kết quả", `<div class="text-3xl text-emerald-400 font-bold">${a}<sup>-1</sup> mod ${n} = ${x}</div>`);
+                }
+                else if(m==="3") {
+                    let [a, exp, n] = [GV('t2-a'), GV('t2-m'), GV('t2-n')];
+                    let r = bModPow(a, exp, n); let m_new = exp % (n-1n); let r2 = bModPow(a, m_new, n);
+                    O.innerHTML = UI.card("Định lý Fermat nhỏ", `<div class="text-slate-300 mb-2">Điều kiện: ${n} là số nguyên tố.<br>Ta có: ${a}<sup>${n}-1</sup> ≡ 1 (mod ${n})</div>
+                    Mũ hiệu dụng: ${exp} mod (${n}-1) = <b class="text-rose-400">${m_new}</b><br>
+                    Tính trực tiếp: ${a}<sup>${m_new}</sup> mod ${n} = <b class="text-emerald-400 text-3xl block mt-2">${r2}</b>`) + (r === r2 ? UI.card("Kiểm tra", "Kết quả khớp với phép tính cơ bản!") : "");
+                }
+                else if(m==="4") {
+                    let n = GV('t2-n'); let ph = phi(n);
+                    let hist = `<div class="text-slate-300">Phân tích thừa số nguyên tố:<br><b class="text-teal-300 font-mono text-lg">${n} = ${ph.f.map(x=>`${x.p}<sup>${x.exp}</sup>`).join(' × ')}</b></div>`;
+                    hist += `<div class="mt-3 text-slate-300">Công thức: φ(${n}) = ${n} × ${ph.f.map(x=>`(1 - 1/${x.p})`).join(' × ')}</div>`;
+                    O.innerHTML = UI.card(`Hàm Euler φ(${n})`, hist) + UI.card("Kết quả", `<div class="text-4xl text-emerald-400 font-bold">φ(${n}) = ${ph.phi}</div>`);
+                }
+                else if(m==="5") {
+                    let [a, exp, n] = [GV('t2-a'), GV('t2-m'), GV('t2-n')]; let g = gcd(a,n);
+                    let ph = phi(n).phi; let r = 0n, m_new = exp;
+                    let explanation = "";
+                    if(g === 1n) {
+                        m_new = exp % ph; r = bModPow(a, m_new, n);
+                        explanation = `<div class="text-slate-300 mb-2">Ta có ƯCLN(${a}, ${n}) = 1. Áp dụng định lý Euler cơ bản:<br>${a}<sup>φ(${n})</sup> ≡ 1 (mod ${n})<br>φ(${n}) = <b class="text-teal-400">${ph}</b></div>
+                        Mũ hiệu dụng: <b class="text-rose-400">${exp}</b> mod ${ph} = <b class="text-rose-400">${m_new}</b>`;
+                    } else {
+                        if (exp >= ph) {
+                            m_new = (exp % ph) + ph; r = bModPow(a, m_new, n);
+                            explanation = `<div class="text-slate-300 mb-2">Vì ƯCLN(${a}, ${n}) = ${g} > 1, ta dùng <b>Định lý Euler mở rộng</b>:<br>a<sup>m</sup> ≡ a<sup>m mod φ(n) + φ(n)</sup> (mod n) với m ≥ φ(n).<br>φ(${n}) = <b class="text-teal-400">${ph}</b></div>
+                            Mũ hiệu dụng: <b class="text-rose-400">${exp}</b> mod ${ph} + ${ph} = <b class="text-rose-400">${m_new}</b>`;
+                        } else {
+                            m_new = exp; r = bModPow(a, m_new, n);
+                            explanation = `<div class="text-slate-300 mb-2">Vì ƯCLN(${a}, ${n}) = ${g} > 1 và m (${exp}) < φ(${n}) (${ph}), ta không cần giảm bậc mũ:</div>`;
+                        }
+                    }
+                    O.innerHTML = UI.card("Định lý Euler", explanation + `<br><br>Giai đoạn tính: ${a}<sup>${m_new}</sup> mod ${n} = <b class="text-emerald-400 text-3xl block mt-2">${r}</b>`);
+                }
+                else if(m==="6") {
+                    let [a, exp, n] = [GV('t2-a'), GV('t2-m'), GV('t2-n')]; let factors = pF(n);
+                    if(factors.length <= 1) throw "n phải phân tích được thành tích 2 số nguyên tố (hoặc hệ số) trở lên để giải bằng CRT.";
+                    let steps = "", as=[], ms=[];
+                    for(let f of factors) {
+                        let modP = f.p ** BigInt(f.exp); ms.push(modP);
+                        let ap = a % modP; let expP = exp % phi(modP).phi;
+                        let rP = bModPow(ap, expP, modP); as.push(rP);
+                        steps += `<tr><td class="border border-slate-700/50 p-1">p = ${modP}</td><td class="border border-slate-700/50 p-1">a' = ${ap}</td><td class="border border-slate-700/50 p-1">k' = ${expP}</td><td class="border border-slate-700/50 p-1 font-bold text-teal-300">${rP}</td></tr>`;
+                    }
+                    let M = n, result = 0n, crtStep = "";
+                    for(let i=0; i<ms.length; i++) {
+                        let Mi = M / ms[i]; let yi = modInv(Mi % ms[i], ms[i]);
+                        result = (result + as[i] * Mi * yi) % M;
+                    }
+                    O.innerHTML = UI.card("1. Hạ bậc theo Modulo Thành phần", `<table class="w-full text-center border-collapse text-sm"><tr class="bg-slate-800/80"><th>Modulo P</th><th>Cơ số (a)</th><th>Mũ (k)</th><th>Kết quả (a_i)</th></tr>${steps}</table>`) + UI.card("2. Kết hợp bằng định lý thặng dư Trung Hoa (CRT)", `<div class="text-3xl text-emerald-400 font-bold">${result}</div>`);
+                }
+                else if(m==="7") {
+                    let As = GVS('t2-a').split(',').map(x=>BigInt(x.trim()));
+                    let Ms = GVS('t2-m').split(',').map(x=>BigInt(x.trim()));
+                    if(As.length !== Ms.length) throw "Số lượng a_i và m_i phải bằng nhau.";
+                    let M = 1n; Ms.forEach(x=>M*=x); let result = 0n, steps="";
+                    let hist = `<table class="w-full text-center border-collapse text-sm"><tr class="bg-slate-800/80"><th>a_i</th><th>m_i</th><th>M_i</th><th>y_i</th></tr>`;
+                    for(let i=0; i<Ms.length; i++) {
+                        let Mi = M / Ms[i]; let yi = modInv(Mi % Ms[i], Ms[i]);
+                        result = (result + As[i] * Mi * yi) % M;
+                        hist += `<tr><td class="border border-slate-700/50 p-1">${As[i]}</td><td class="border border-slate-700/50 p-1 text-teal-300">${Ms[i]}</td><td class="border border-slate-700/50 p-1">${Mi}</td><td class="border border-slate-700/50 p-1 text-rose-400">${yi}</td></tr>`;
+                    } hist += `</table>`;
+                    O.innerHTML = UI.card("Bảng giải hệ CRT", hist) + UI.card("Kết quả hệ phương trình", `Modulo tổng M = ${M}<br><div class="text-3xl text-emerald-400 font-bold mt-2">x ≡ ${result} (mod ${M})</div>`);
+                }
+                else if(m==="8") {
+                    let [a, n] = [GV('t2-a'), GV('t2-n')]; if(gcd(a,n)!==1n) throw `ƯCLN(${a}, ${n}) ≠ 1! Số a không thể là căn nguyên thủy.`;
+                    let ph = phi(n).phi; let qs = pF(ph); let res=true, steps="";
+                    for(let q of qs) {
+                        let exp = ph / q.p; let val = bModPow(a, exp, n);
+                        steps += `<div class="${val==1n?'text-rose-400':'text-teal-400'} mb-1">${a}<sup>${ph}/${q.p}</sup> = ${a}<sup>${exp}</sup> ≡ <b>${val}</b> (mod ${n})</div>`;
+                        if(val === 1n) res=false;
+                    }
+                    O.innerHTML = UI.card("1. Phân tích φ(n)", `φ(${n}) = ${ph}<br>Thừa số nguyên tố của ${ph} là: ${qs.map(x=>x.p).join(', ')}`) + UI.card("2. Kiểm tra các lũy thừa", steps) + UI.card("3. Kết luận", `<div class="p-4 rounded-xl text-center font-bold text-2xl border-2 ${res?'border-emerald-500/50 bg-emerald-900/40 text-emerald-400':'border-rose-500/50 bg-rose-900/40 text-rose-400'}">${a} ${res?'LÀ':'KHÔNG PHẢI LÀ'} căn nguyên thủy modulo ${n}</div>`);
+                }
+                else if(m==="9") {
+                    let [a, b, n] = [GV('t2-a'), GV('t2-b'), GV('t2-n')];
+                    let m_size = 1n; while(m_size * m_size < n) m_size++;
+                    let table = new Map(); let curr = 1n;
+                    for(let j=0n; j<m_size; j++) { table.set(curr, j); curr = (curr * a) % n; }
+                    let a_inv_m = bModPow(modInv(a, n), m_size, n);
+                    curr = b; let found = -1n;
+                    for(let i=0n; i<m_size; i++) {
+                        if(table.has(curr)) { found = i * m_size + table.get(curr); break; }
+                        curr = (curr * a_inv_m) % n;
+                    }
+                    if(found === -1n) throw `Không tìm thấy log_${a}(${b}) mod ${n}`;
+                    O.innerHTML = UI.card("Thuật toán Baby-Step Giant-Step", `Kích thước khối m = ⌈√${n}⌉ = ${m_size}`) + UI.card("Kết quả thuật toán Logarithm Rời Rạc", `<div class="text-3xl font-mono font-bold text-emerald-400">k = ${found}</div><div class="text-xs text-slate-400 mt-2">Thử lại: ${a}^${found} mod ${n} = ${bModPow(a, found, n)}</div>`);
+                }
+                else if(m==="10") {
+                    let [a, b, x, y, n] = [GV('t2-a'), GV('t2-b'), GV('t2-x'), GV('t2-y'), GV('t2-n')];
+                    let ax = bModPow(a,x,n); let by = bModPow(b,y,n);
+                    let a1 = (ax + by) % n; let a2 = (ax - by) % n; if(a2 < 0n) a2+=n;
+                    let a3 = (ax * by) % n; let a4 = -1n;
+                    try { a4 = modInv(by, n); } catch(e){}
+                    let a5 = a4 !== -1n ? (ax * a4) % n : "Lỗi (không tồn tại a4)";
+                    O.innerHTML = UI.card("Các Thành Phần Modulo Cơ Sở", `a<sup>x</sup> mod n = ${a}<sup>${x}</sup> mod ${n} = <b class="text-teal-300 font-mono text-xl">${ax}</b><br>b<sup>y</sup> mod n = ${b}<sup>${y}</sup> mod ${n} = <b class="text-indigo-300 font-mono text-xl">${by}</b>`) 
+                    + UI.card("Tính 5 Biểu thức Hỗn hợp", `<table class="w-full text-left border-collapse">
+                        <tr><th class="border border-slate-700/50 p-2">A1 = (a<sup>x</sup> + b<sup>y</sup>) mod n</th><td class="border border-slate-700/50 p-2 text-emerald-400 font-bold">${a1}</td></tr>
+                        <tr><th class="border border-slate-700/50 p-2">A2 = (a<sup>x</sup> - b<sup>y</sup>) mod n</th><td class="border border-slate-700/50 p-2 text-emerald-400 font-bold">${a2}</td></tr>
+                        <tr><th class="border border-slate-700/50 p-2">A3 = (a<sup>x</sup> × b<sup>y</sup>) mod n</th><td class="border border-slate-700/50 p-2 text-emerald-400 font-bold">${a3}</td></tr>
+                        <tr><th class="border border-slate-700/50 p-2">A4 = (b<sup>y</sup>)<sup>-1</sup> mod n</th><td class="border border-slate-700/50 p-2 ${a4===-1n?'text-rose-400':'text-teal-400'} font-bold">${a4===-1n?'Vô nghiệm':a4}</td></tr>
+                        <tr><th class="border border-slate-700/50 p-2">A5 = (a<sup>x</sup> / b<sup>y</sup>) mod n</th><td class="border border-slate-700/50 p-2 text-emerald-400 font-bold">${a5}</td></tr>
+                    </table>`);
+                }
+            } catch(e) { O.innerHTML = UI.err(e); }
         }
 
-        function modInv(a, m) {
-            let [m0, y, x] = [m, 0n, 1n];
-            if (m === 1n) return 0n;
-            while (a > 1n) { let q = a / m; let t = m; m = a % m; a = t; t = y; y = x - q * y; x = t; }
-            if (x < 0n) x += m0; return x;
-        }
-        const bModPow = (b, e, mod) => {
-            let r=1n; b = (b%mod+mod)%mod;
-            while(e>0n) { if(e%2n===1n) r=(r*b)%mod; e/=2n; b=(b*b)%mod; } return r;
-        };
 
         function runP3() {
             try {
@@ -271,59 +558,198 @@
             } catch(e) { document.getElementById('o3').innerHTML = UI.err(e); }
         }
 
-        const SBOX=[99,124,119,123,242,107,111,197,48,1,103,43,254,215,171,118,202,130,201,125,250,89,71,240,173,212,162,175,156,164,114,192,183,253,147,38,54,63,247,204,52,165,229,241,113,216,49,21,4,199,35,195,24,150,5,154,7,18,128,226,235,39,178,117,9,131,44,26,27,110,90,160,82,59,214,179,41,227,47,132,83,209,0,237,32,252,177,91,106,203,190,57,74,76,88,207,208,239,170,251,67,77,51,133,69,249,2,127,80,60,159,168,81,163,64,143,146,157,56,245,188,182,218,33,16,255,243,210,205,12,19,236,95,151,68,23,196,167,126,61,100,93,25,115,96,129,79,220,34,42,144,136,70,238,184,20,222,94,11,219,224,50,58,10,73,6,36,92,194,211,172,98,145,149,228,121,231,200,55,109,141,213,78,169,108,86,244,234,101,122,174,8,186,120,37,46,28,166,180,198,232,221,116,31,75,189,139,138,112,62,181,102,72,3,246,14,97,53,87,185,134,193,29,158,225,248,152,17,105,217,142,148,155,30,135,233,206,85,40,223,140,161,137,13,191,230,66,104,65,153,45,15,176,84,187,22];
-        const RCON=[0,1,2,4,8,16,32,64,128,27,54];
-        
-        function runP4() {
+        /* =========================================
+           BÀI 4: MÃ HÓA AES-128 (3 MODULES)
+           ========================================= */
+        const AES_CONST = {
+            SBOX: [
+                0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
+                0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
+                0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15,
+                0x04, 0xc7, 0x23, 0xc3, 0x18, 0x96, 0x05, 0x9a, 0x07, 0x12, 0x80, 0xe2, 0xeb, 0x27, 0xb2, 0x75,
+                0x09, 0x83, 0x2c, 0x1a, 0x1b, 0x6e, 0x5a, 0xa0, 0x52, 0x3b, 0xd6, 0xb3, 0x29, 0xe3, 0x2f, 0x84,
+                0x53, 0xd1, 0x00, 0xed, 0x20, 0xfc, 0xb1, 0x5b, 0x6a, 0xcb, 0xbe, 0x39, 0x4a, 0x4c, 0x58, 0xcf,
+                0xd0, 0xef, 0xaa, 0xfb, 0x43, 0x4d, 0x33, 0x85, 0x45, 0xf9, 0x02, 0x7f, 0x50, 0x3c, 0x9f, 0xa8,
+                0x51, 0xa3, 0x40, 0x8f, 0x92, 0x9d, 0x38, 0xf5, 0xbc, 0xb6, 0xda, 0x21, 0x10, 0xff, 0xf3, 0xd2,
+                0xcd, 0x0c, 0x13, 0xec, 0x5f, 0x97, 0x44, 0x17, 0xc4, 0xa7, 0x7e, 0x3d, 0x64, 0x5d, 0x19, 0x73,
+                0x60, 0x81, 0x4f, 0xdc, 0x22, 0x2a, 0x90, 0x88, 0x46, 0xee, 0xb8, 0x14, 0xde, 0x5e, 0x0b, 0xdb,
+                0xe0, 0x32, 0x3a, 0x0a, 0x49, 0x06, 0x24, 0x5c, 0xc2, 0xd3, 0xac, 0x62, 0x91, 0x95, 0xe4, 0x79,
+                0xe7, 0xc8, 0x37, 0x6d, 0x8d, 0xd5, 0x4e, 0xa9, 0x6c, 0x56, 0xf4, 0xea, 0x65, 0x7a, 0xae, 0x08,
+                0xba, 0x78, 0x25, 0x2e, 0x1c, 0xa6, 0xb4, 0xc6, 0xe8, 0xdd, 0x74, 0x1f, 0x4b, 0xbd, 0x8b, 0x8a,
+                0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e,
+                0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
+                0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
+            ],
+            RCON: [0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36]
+        };
+
+        const AES_UTILS = {
+            toHexString: (arr) => arr.map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(''),
+            hexTo4Words: (hex) => {
+                let words = [];
+                for (let i = 0; i < 4; i++) {
+                    let chunk = hex.substr(i * 8, 8);
+                    words.push([parseInt(chunk.substr(0, 2), 16), parseInt(chunk.substr(2, 2), 16), parseInt(chunk.substr(4, 2), 16), parseInt(chunk.substr(6, 2), 16)]);
+                }
+                return words;
+            },
+            gMul2: (b) => ((b << 1) ^ ((b & 0x80) ? 0x1B : 0x00)) & 0xFF,
+            gMul3: (b) => (AES_UTILS.gMul2(b) ^ b) & 0xFF,
+            stateToHex: (state) => {
+                let hex = "";
+                for(let c=0; c<4; c++) {
+                    for(let r=0; r<4; r++) hex += state[c][r].toString(16).padStart(2, '0').toUpperCase();
+                }
+                return hex;
+            }
+        };
+
+        function generateKeyExpansion(keyHex) {
+            let words = AES_UTILS.hexTo4Words(keyHex);
+            let history = [];
+            for (let i = 1; i <= 10; i++) {
+                let p = (i - 1) * 4;
+                let w_old0 = words[p], w_old1 = words[p+1], w_old2 = words[p+2], w_old3 = words[p+3];
+                
+                let rw = [w_old3[1], w_old3[2], w_old3[3], w_old3[0]];
+                let sw = rw.map(b => AES_CONST.SBOX[b]);
+                let rconArr = [AES_CONST.RCON[i], 0x00, 0x00, 0x00];
+                let xcsw = sw.map((b, idx) => b ^ rconArr[idx]);
+                
+                let w_new0 = w_old0.map((b, idx) => b ^ xcsw[idx]);
+                let w_new1 = w_old1.map((b, idx) => b ^ w_new0[idx]);
+                let w_new2 = w_old2.map((b, idx) => b ^ w_new1[idx]);
+                let w_new3 = w_old3.map((b, idx) => b ^ w_new2[idx]);
+                
+                words.push(w_new0, w_new1, w_new2, w_new3);
+                
+                history.push({ 
+                    round: i, 
+                    w_old3: AES_UTILS.toHexString(w_old3), 
+                    rw: AES_UTILS.toHexString(rw), 
+                    sw: AES_UTILS.toHexString(sw), 
+                    xcsw: AES_UTILS.toHexString(xcsw), 
+                    w_new0: AES_UTILS.toHexString(w_new0), 
+                    w_new1: AES_UTILS.toHexString(w_new1), 
+                    w_new2: AES_UTILS.toHexString(w_new2), 
+                    w_new3: AES_UTILS.toHexString(w_new3), 
+                    Ki: AES_UTILS.toHexString([...w_new0, ...w_new1, ...w_new2, ...w_new3]) 
+                });
+            }
+            let K_array = []; for(let i = 0; i <= 10; i++) K_array.push([words[i*4], words[i*4+1], words[i*4+2], words[i*4+3]]);
+            return { keys: K_array, expansionHistory: history };
+        }
+
+        function encryptAESBlock(M_Hex, keys) {
+            let state = AES_UTILS.hexTo4Words(M_Hex);
+            let history = [];
+            
+            // Round 0
+            state = state.map((col, c) => col.map((b, r) => b ^ keys[0][c][r]));
+            history.push({ round: 0, in: M_Hex, addRoundKey: AES_UTILS.stateToHex(state) });
+
+            for (let round = 1; round <= 10; round++) {
+                let rd = { round: round, in: AES_UTILS.stateToHex(state) };
+                // 1. SubByte
+                state = state.map(col => col.map(b => AES_CONST.SBOX[b]));
+                rd.subByte = AES_UTILS.stateToHex(state);
+
+                // 2. ShiftRows
+                let sr = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+                for (let c = 0; c < 4; c++) {
+                    for (let r = 0; r < 4; r++) sr[c][r] = state[(c + r) % 4][r];
+                }
+                state = sr;
+                rd.shiftRows = AES_UTILS.stateToHex(state);
+
+                // 3. MixColumns
+                if (round < 10) {
+                    let mc = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+                    for (let c = 0; c < 4; c++) {
+                        let s0=state[c][0], s1=state[c][1], s2=state[c][2], s3=state[c][3];
+                        mc[c][0] = AES_UTILS.gMul2(s0) ^ AES_UTILS.gMul3(s1) ^ s2 ^ s3;
+                        mc[c][1] = s0 ^ AES_UTILS.gMul2(s1) ^ AES_UTILS.gMul3(s2) ^ s3;
+                        mc[c][2] = s0 ^ s1 ^ AES_UTILS.gMul2(s2) ^ AES_UTILS.gMul3(s3);
+                        mc[c][3] = AES_UTILS.gMul3(s0) ^ s1 ^ s2 ^ AES_UTILS.gMul2(s3);
+                    }
+                    state = mc;
+                    rd.mixColumns = AES_UTILS.stateToHex(state);
+                }
+
+                // 4. AddRoundKey
+                let k_c = keys[round];
+                state = state.map((col, c) => col.map((b, r) => b ^ k_c[c][r]));
+                rd.addRoundKey = AES_UTILS.stateToHex(state);
+
+                history.push(rd);
+            }
+            return { cipherText: history[10].addRoundKey, encryptHistory: history };
+        }
+
+        function runAES() {
             try {
-                let pt = document.getElementById('p4-pt').value.replace(/\s+/g, '');
-                let ks = document.getElementById('p4-key').value.replace(/\s+/g, '');
-                let O = document.getElementById('o4');
-                if(pt.length !== 32 || ks.length !== 32) throw "Độ dài phải đúng 32 ký tự HEX.";
+                let pt = document.getElementById('p4-pt').value.replace(/\s+/g, '').toUpperCase();
+                let ks = document.getElementById('p4-key').value.replace(/\s+/g, '').toUpperCase();
+                if(pt.length !== 32 || ks.length !== 32) throw "Độ dài PT và Key phải đúng 32 ký tự HEX.";
                 
-                let state=[]; for(let r=0;r<4;r++){ state[r]=[]; for(let c=0;c<4;c++) state[r].push(parseInt(pt.substring((c*4+r)*2, (c*4+r)*2+2), 16)); }
-                let kArr=[]; for(let i=0;i<16;i++) kArr.push(parseInt(ks.substring(i*2, i*2+2), 16));
-                
-                let w=[]; for(let i=0;i<4;i++) w.push([kArr[4*i], kArr[4*i+1], kArr[4*i+2], kArr[4*i+3]]);
-                for(let i=4;i<44;i++){
-                    let tm=[...w[i-1]];
-                    if(i%4===0) { let f = tm.shift(); tm.push(f); tm = tm.map(x=>SBOX[x]); tm[0]^=RCON[i/4]; }
-                    w.push(w[i-4].map((v,id)=>v^tm[id]));
+                let { keys, expansionHistory } = generateKeyExpansion(ks);
+                let { cipherText, encryptHistory } = encryptAESBlock(pt, keys);
+
+                // Render Khối 1: Sinh Khóa
+                let htmlKey = `<h3 class="text-xl font-bold text-violet-400 mb-4 flex items-center gap-2">Phần 1: Quá Trình Sinh Khóa (Key Expansion)</h3>`;
+                htmlKey += `<div class="overflow-x-auto"><table class="w-full text-sm text-left border-collapse whitespace-nowrap"><tr class="bg-violet-900/40 text-violet-300">
+                    <th class="border border-slate-700/50 p-2 text-center">Vòng</th><th class="border border-slate-700/50 p-2">W cũ (w3)</th><th class="border border-slate-700/50 p-2">RotWord</th><th class="border border-slate-700/50 p-2">SubWord</th>
+                    <th class="border border-slate-700/50 p-2">XorRcon</th><th class="border border-slate-700/50 p-2">w_new0 / w_new1 / w_new2 / w_new3</th><th class="border border-slate-700/50 p-2">Khóa K_i (128bit)</th></tr>`;
+                htmlKey += `<tr><td class="border border-slate-700/50 p-2 text-center bg-slate-800/80">0</td><td colspan="5" class="border border-slate-700/50 p-2 text-center text-slate-400 bg-slate-800/80">Sử dụng trực tiếp Khóa gốc K_0</td><td class="border border-slate-700/50 p-2 font-mono font-bold text-emerald-400 bg-slate-800">${ks}</td></tr>`;
+                for(let h of expansionHistory) {
+                    htmlKey += `<tr>
+                        <td class="border border-slate-700/50 p-2 text-center font-bold text-violet-400 bg-slate-800/40">${h.round}</td>
+                        <td class="border border-slate-700/50 p-2 font-mono text-slate-400">${h.w_old3}</td>
+                        <td class="border border-slate-700/50 p-2 font-mono text-blue-300">${h.rw}</td>
+                        <td class="border border-slate-700/50 p-2 font-mono text-orange-300">${h.sw}</td>
+                        <td class="border border-slate-700/50 p-2 font-mono text-pink-300">${h.xcsw}</td>
+                        <td class="border border-slate-700/50 p-2 font-mono text-xs text-slate-300">${h.w_new0} - ${h.w_new1} - ${h.w_new2} - ${h.w_new3}</td>
+                        <td class="border border-slate-700/50 p-2 font-mono font-bold text-emerald-400 bg-slate-800/50 shadow-inner">${h.Ki}</td>
+                    </tr>`;
                 }
+                htmlKey += `</table></div>`;
+                document.getElementById('aes-o-key').innerHTML = htmlKey;
+
+                // Render Khối 2: Mã Hóa
+                let htmlEnc = `<h3 class="text-xl font-bold text-violet-400 mb-4 flex items-center gap-2 mt-2">Phần 2: Quá Trình Mã Hóa (Encryption Process)</h3>`;
+                htmlEnc += `<div class="overflow-x-auto"><table class="w-full text-sm text-center border-collapse whitespace-nowrap"><tr class="bg-violet-900/40 text-violet-300">
+                    <th class="border border-slate-700/50 p-2">Vòng</th><th class="border border-slate-700/50 p-2">Đầu vào (State)</th><th class="border border-slate-700/50 p-2">Sau SubBytes</th>
+                    <th class="border border-slate-700/50 p-2">Sau ShiftRows</th><th class="border border-slate-700/50 p-2">Sau MixColumns</th><th class="border border-slate-700/50 p-2">Thêm AddRoundKey (Trạng thái ra)</th></tr>`;
                 
-                let rKeys=[]; for(let r=0;r<=10;r++){ let rm=[[],[],[],[]]; for(let c=0;c<4;c++) for(let ro=0;ro<4;ro++) rm[ro][c] = w[r*4+c][ro]; rKeys.push(rm); }
+                // Add Round 0 manually
+                let r0 = encryptHistory[0];
+                htmlEnc += `<tr>
+                        <td class="border border-slate-700/50 p-2 font-bold text-violet-400 bg-slate-800/40">0</td>
+                        <td class="border border-slate-700/50 p-2 font-mono text-slate-300">${r0.in}</td>
+                        <td colspan="3" class="border border-slate-700/50 p-2 font-mono text-slate-500">Chỉ thực hiện AddRoundKey</td>
+                        <td class="border border-slate-700/50 p-2 font-mono font-bold text-emerald-400 bg-slate-800/50 shadow-inner">${r0.addRoundKey}</td>
+                    </tr>`;
 
-                const A_R = (s,k) => s.map((ro,r) => ro.map((v,c) => v^k[r][c]));
-                const S_B = s => s.map(ro => ro.map(v => SBOX[v]));
-                const S_R = s => [ [...s[0]], [s[1][1],s[1][2],s[1][3],s[1][0]], [s[2][2],s[2][3],s[2][0],s[2][1]], [s[3][3],s[3][0],s[3][1],s[3][2]] ];
-                const M2 = x => ((x<<1)^((x&0x80)?0x1b:0))&0xff; const M3 = x => M2(x)^x;
-                const M_C = s => {
-                    let r=[[],[],[],[]];
-                    for(let c=0;c<4;c++){
-                        r[0][c] = M2(s[0][c])^M3(s[1][c])^s[2][c]^s[3][c];
-                        r[1][c] = s[0][c]^M2(s[1][c])^M3(s[2][c])^s[3][c];
-                        r[2][c] = s[0][c]^s[1][c]^M2(s[2][c])^M3(s[3][c]);
-                        r[3][c] = M3(s[0][c])^s[1][c]^s[2][c]^M2(s[3][c]);
-                    } return r;
-                };
-
-                let html = UI.card("Sinh Khóa", "Thành công 44 Words.");
-                html += UI.card(`Round 0`, `<div class="flex gap-4 items-center">PT: ${UI.mat(state)} ⊕ RK: ${UI.mat(rKeys[0])}</div>`);
-                state = A_R(state, rKeys[0]);
-
-                for(let ro=1; ro<=10; ro++){
-                    state = S_B(state); let rb = `<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2"><div>SB${UI.mat(state)}</div>`;
-                    state = S_R(state); rb += `<div>SR${UI.mat(state)}</div>`;
-                    if(ro<10){ state = M_C(state); rb += `<div>MC${UI.mat(state)}</div>`; }
-                    state = A_R(state, rKeys[ro]); rb += `<div>ARK${UI.mat(state)}</div></div>`;
-                    html += UI.card(`Round ${ro}`, rb);
+                for(let i=1; i<=10; i++) {
+                    let hr = encryptHistory[i];
+                    htmlEnc += `<tr>
+                        <td class="border border-slate-700/50 p-2 font-bold text-violet-400 bg-slate-800/40">${hr.round}</td>
+                        <td class="border border-slate-700/50 p-2 font-mono text-slate-300">${hr.in}</td>
+                        <td class="border border-slate-700/50 p-2 font-mono ${hr.subByte ? 'text-blue-300' : 'text-slate-500'}">${hr.subByte || '— N/A —'}</td>
+                        <td class="border border-slate-700/50 p-2 font-mono ${hr.shiftRows ? 'text-pink-300' : 'text-slate-500'}">${hr.shiftRows || '— N/A —'}</td>
+                        <td class="border border-slate-700/50 p-2 font-mono ${hr.mixColumns ? 'text-orange-300' : 'text-slate-500'}">${hr.mixColumns || '— N/A (Last Round) —'}</td>
+                        <td class="border border-slate-700/50 p-2 font-mono font-bold text-emerald-400 bg-slate-800/50 shadow-inner">${hr.addRoundKey}</td>
+                    </tr>`;
                 }
+                htmlEnc += `</table></div>`;
+                htmlEnc += `<div class="mt-8 text-center"><div class="text-slate-400 font-bold mb-2">BẢN MÃ CUỐI CÙNG VÒNG 10 (CIPHERTEXT):</div><div class="inline-block px-8 py-4 bg-emerald-900/40 border-2 border-emerald-500/50 rounded-xl font-mono text-3xl font-bold text-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.3)]">${cipherText}</div></div>`;
                 
-                let cipherHex=""; for(let c=0;c<4;c++) for(let ro=0;ro<4;ro++) cipherHex += UI.hex(state[ro][c]);
-                html += `<div class="p-6 bg-violet-900 rounded-xl text-center shadow-xl text-white font-mono break-all font-bold text-2xl tracking-widest">${cipherHex}</div>`;
-                
-                O.innerHTML = html;
-            }catch(e) { document.getElementById('o4').innerHTML = UI.err(e); }
+                document.getElementById('aes-o-enc').innerHTML = htmlEnc;
+
+            } catch(e) { 
+                document.getElementById('aes-o-key').innerHTML = UI.err(e); 
+                document.getElementById('aes-o-enc').innerHTML = ''; 
+            }
         }
 
         /* ======= BÀI 5: MÃ HÓA BẤT ĐỐI XỨNG ======= */
