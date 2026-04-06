@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Solver - Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; overflow: hidden; }
+        .font-heading { font-family: 'Outfit', sans-serif; }
+        
+        /* Ambient bg & Glassmorphism */
+        .ambient-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            background: radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.15), transparent 30%),
+                        radial-gradient(circle at 90% 80%, rgba(14, 165, 233, 0.15), transparent 30%);
+            animation: pulseBg 15s infinite alternate;
+        }
+        @keyframes pulseBg { 0% { opacity: 0.7; } 100% { opacity: 1; transform: scale(1.05); } }
+        
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+        }
+        
+        .glass-input {
+            background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(148, 163, 184, 0.2);
+            color: #f8fafc; transition: all 0.3s ease;
+        }
+        .glass-input:focus { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); outline: none; }
+        
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .hidden-tab { display: none !important; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.4); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.8); }
+    </style>
+</head>
+<body class="flex h-screen text-slate-200">
+    <div class="ambient-bg"></div>
+
+    <!-- Sidebar -->
+    <div class="w-72 glass-panel border-r border-slate-700/50 flex flex-col z-10 shrink-0">
+        <div class="p-6 border-b border-slate-700/50 relative overflow-hidden">
+            <h1 class="text-2xl font-bold font-heading bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-teal-300 relative z-10">Crypto Solver</h1>
+            <p class="text-slate-400 text-xs mt-1 uppercase tracking-widest relative z-10">Pro Edition</p>
+            <div class="absolute -right-4 -top-4 w-16 h-16 bg-blue-500 rounded-full blur-3xl opacity-30"></div>
+        </div>
+        <nav class="flex-1 p-4 space-y-3 overflow-y-auto">
+            <button onclick="T('t1', this)" class="w-full text-left px-4 py-3 rounded-xl bg-gradient-to-r from-blue-600/80 to-indigo-600/80 text-white font-medium menu-btn shadow-lg shadow-blue-900/40 transition-all font-heading">1. Hoán vị (Permutation)</button>
+            <button onclick="T('t2', this)" class="w-full text-left px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800/50 menu-btn transition-all font-heading">2. Lũy thừa Modulo</button>
+            <button onclick="T('t4', this)" class="w-full text-left px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800/50 menu-btn transition-all font-heading">3. Mã hóa AES-128</button>
+            <button onclick="T('t6', this)" class="w-full text-left px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800/50 menu-btn transition-all font-heading">4. Mã hóa Bất đối xứng</button>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto relative p-6 md:p-10">
+        <div id="t1" class="tab-content max-w-6xl mx-auto fade-in">
+            <h2 class="text-3xl font-bold font-heading mb-6 flex items-center gap-3"><span class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm">01</span> Mã hóa Hoán vị Cột</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <div class="lg:col-span-1 glass-panel p-6 rounded-2xl h-fit text-sm">
+                    <label class="block mb-2 font-semibold text-slate-300">Bản rõ:</label>
+                    <input id="p1-text" class="w-full p-2.5 rounded-lg glass-input mb-5" value="">
+                    <label class="block mb-2 font-semibold text-slate-300">Khóa (VD: 3,1,4,2):</label>
+                    <input id="p1-key" class="w-full p-2.5 rounded-lg glass-input mb-5" value="">
+                    <label class="block mb-2 font-semibold text-slate-300">Ký tự đệm:</label>
+                    <input id="p1-pad" class="w-full p-2.5 rounded-lg glass-input mb-6" value="">
+                    <button onclick="runP1()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white p-3 rounded-lg font-heading font-bold shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5">MÃ HÓA NGAY</button>
+                </div>
+                <div class="lg:col-span-3 glass-panel p-6 rounded-2xl min-h-[400px]" id="o1"></div>
+            </div>
+        </div>
+
+        <div id="t2" class="tab-content hidden-tab max-w-6xl mx-auto fade-in">
+            <h2 class="text-3xl font-bold font-heading mb-6 flex items-center gap-3"><span class="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center text-sm">02</span> Phép tính Lũy thừa Modulo</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <div class="lg:col-span-1 glass-panel p-6 rounded-2xl h-fit text-sm">
+                    <label class="block mb-2 font-semibold text-slate-300">Cơ số (a):</label>
+                    <input type="number" id="p2-a" class="w-full p-2.5 rounded-lg glass-input mb-5" value="">
+                    <label class="block mb-2 font-semibold text-slate-300">Số mũ (m):</label>
+                    <input type="number" id="p2-m" class="w-full p-2.5 rounded-lg glass-input mb-5" value="">
+                    <label class="block mb-2 font-semibold text-slate-300">Modulo (n):</label>
+                    <input type="number" id="p2-n" class="w-full p-2.5 rounded-lg glass-input mb-6" value="">
+                    <button onclick="runP2()" class="w-full bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-400 hover:to-emerald-500 text-white p-3 rounded-lg font-heading font-bold shadow-lg shadow-teal-500/30 transition transform hover:-translate-y-0.5">TÍNH TOÁN NGAY</button>
+                </div>
+                <div class="lg:col-span-3 glass-panel p-6 rounded-2xl min-h-[400px]" id="o2"></div>
+            </div>
+        </div>
+
+        <div id="t4" class="tab-content hidden-tab max-w-6xl mx-auto fade-in">
+            <h2 class="text-3xl font-bold font-heading mb-6 flex items-center gap-3"><span class="w-8 h-8 rounded-lg bg-violet-500/20 text-violet-400 flex items-center justify-center text-sm">04</span> Mã hóa AES-128</h2>
+            <div class="grid grid-cols-1 xl:grid-cols-4 gap-8">
+                <div class="xl:col-span-1 glass-panel p-6 rounded-2xl h-fit text-sm">
+                    <label class="block mb-2 font-semibold text-slate-300">Plaintext (32 HEX):</label>
+                    <textarea id="p4-pt" class="w-full p-3 rounded-lg glass-input font-mono text-xs mb-5 resize-none h-20 placeholder-slate-600"></textarea>
+                    <label class="block mb-2 font-semibold text-slate-300">Key (32 HEX):</label>
+                    <textarea id="p4-key" class="w-full p-3 rounded-lg glass-input font-mono text-xs mb-6 resize-none h-20 placeholder-slate-600"></textarea>
+                    <button onclick="runP4()" class="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 text-white p-3 rounded-lg font-heading font-bold shadow-lg shadow-violet-500/30 border border-violet-400/30">MÃ HÓA AES</button>
+                </div>
+                <div class="xl:col-span-3 glass-panel p-6 rounded-2xl h-[70vh] overflow-y-auto" id="o4"></div>
+            </div>
+        </div>
+
+        <!-- Tab 6 (Mã hóa Bất đối xứng) -->
+        <div id="t6" class="tab-content hidden-tab max-w-6xl mx-auto fade-in">
+            <h2 class="text-3xl font-bold font-heading mb-6 flex items-center gap-3"><span class="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-sm">04</span> Mã hóa Bất đối xứng</h2>
+            
+            <!-- 1. Diffie-Hellman -->
+            <div class="glass-panel p-6 rounded-2xl mb-8">
+                <h3 class="text-xl font-bold font-heading mb-4 text-orange-400">1. Trao đổi khóa Diffie-Hellman</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-1 text-sm">
+                        <label class="block mb-1 text-slate-300 font-semibold">Số nguyên tố q:</label><input id="dh-q" class="w-full p-2.5 mb-3 rounded-lg glass-input" value="">
+                        <label class="block mb-1 text-slate-300 font-semibold">Căn nguyên thủy a:</label><input id="dh-a" class="w-full p-2.5 mb-3 rounded-lg glass-input" value="">
+                        <label class="block mb-1 text-slate-300 font-semibold">Khóa riêng An (xA):</label><input id="dh-xa" class="w-full p-2.5 mb-3 rounded-lg glass-input" value="">
+                        <label class="block mb-1 text-slate-300 font-semibold">Khóa riêng Ba (xB):</label><input id="dh-xb" class="w-full p-2.5 mb-4 rounded-lg glass-input" value="">
+                        <button onclick="calcDH()" class="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-white p-3 rounded-lg font-heading font-bold shadow-lg shadow-orange-500/30 transition transform hover:-translate-y-0.5">TÍNH KHÓA PHIÊN</button>
+                    </div>
+                    <div class="md:col-span-2 glass-panel p-4 rounded-xl min-h-[150px]" id="o-dh"></div>
+                </div>
+            </div>
+
+            <!-- 2. RSA -->
+            <div class="glass-panel p-6 rounded-2xl mb-8">
+                <h3 class="text-xl font-bold font-heading mb-4 text-yellow-400">2. Thuật toán RSA</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-1 text-sm">
+                        <label class="block mb-1 text-slate-300 font-semibold">Số nguyên tố p:</label><input id="rsa-p" class="w-full p-2.5 mb-3 rounded-lg glass-input" value="">
+                        <label class="block mb-1 text-slate-300 font-semibold">Số nguyên tố q:</label><input id="rsa-q" class="w-full p-2.5 mb-3 rounded-lg glass-input" value="">
+                        <label class="block mb-1 text-slate-300 font-semibold">Số mũ công khai e:</label><input id="rsa-e" class="w-full p-2.5 mb-3 rounded-lg glass-input" value="">
+                        <label class="block mb-1 text-slate-300 font-semibold">Bản rõ M / Bản mã C:</label><input id="rsa-mc" class="w-full p-2.5 mb-3 rounded-lg glass-input" value="">
+                        <label class="block mb-1 text-slate-300 font-semibold">Chế độ hoạt động:</label>
+                        <select id="rsa-mode" class="w-full p-2.5 mb-5 rounded-lg glass-input [&>option]:bg-slate-800">
+                            <option value="enc">Mã hóa / Giải mã Bảo mật</option>
+                            <option value="sig">Tạo Chữ ký / Xác minh</option>
+                        </select>
+                        <button onclick="calcRSA()" class="w-full bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-white p-3 rounded-lg font-heading font-bold shadow-lg shadow-yellow-500/30 transition transform hover:-translate-y-0.5">THỰC THI RSA</button>
+                    </div>
+                    <div class="md:col-span-2 glass-panel p-4 rounded-xl min-h-[150px]" id="o-rsa"></div>
+                </div>
+            </div>
+
+            <!-- 3. ElGamal -->
+            <div class="glass-panel p-6 rounded-2xl mb-8">
+                <h3 class="text-xl font-bold font-heading mb-4 text-lime-400">3. Mật mã ElGamal</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-1 text-sm">
+                        <label class="block mb-1 text-slate-300 font-semibold">Số nguyên tố q:</label><input id="el-q" class="w-full p-2.5 mb-3 rounded-lg glass-input" value="">
+                        <label class="block mb-1 text-slate-300 font-semibold">Căn nguyên thủy a:</label><input id="el-a" class="w-full p-2.5 mb-3 rounded-lg glass-input" value="">
+                        <label class="block mb-1 text-slate-300 font-semibold">Khóa riêng xA:</label><input id="el-xa" class="w-full p-2.5 mb-4 rounded-lg glass-input" value="">
+                        
+                        <div class="p-3 border border-slate-600/50 rounded-lg mb-4 bg-slate-800/30">
+                            <div class="text-xs font-bold text-lime-300 mb-2 uppercase">1. Nếu Mã Hóa:</div>
+                            <label class="block mb-1 text-slate-300 text-xs">Bản rõ M:</label><input id="el-m" class="w-full p-2 mb-2 rounded-lg glass-input" placeholder="VD: 19">
+                            <label class="block mb-1 text-slate-300 text-xs">Số ngẫu nhiên k:</label><input id="el-k" class="w-full p-2 rounded-lg glass-input" placeholder="VD: 5">
+                        </div>
+                        
+                        <div class="p-3 border border-slate-600/50 rounded-lg mb-5 bg-slate-800/30">
+                            <div class="text-xs font-bold text-teal-300 mb-2 uppercase">2. Nếu Giải Mã:</div>
+                            <label class="block mb-1 text-slate-300 text-xs">Bản mã C1, C2:</label><input id="el-c" class="w-full p-2 rounded-lg glass-input" placeholder="VD: 15, 23">
+                        </div>
+
+                        <button onclick="calcElGamal()" class="w-full bg-gradient-to-r from-lime-500 to-emerald-600 hover:from-lime-400 hover:to-emerald-500 text-white p-3 rounded-lg font-heading font-bold shadow-lg shadow-lime-500/30 transition transform hover:-translate-y-0.5">THỰC THI ELGAMAL</button>
+                    </div>
+                    <div class="md:col-span-2 glass-panel p-4 rounded-xl min-h-[150px]" id="o-el"></div>
+                </div>
+            </div>
+
+            <!-- 4. DSA -->
+            <div class="glass-panel p-6 rounded-2xl">
+                <h3 class="text-xl font-bold font-heading mb-4 text-pink-400">4. Chữ ký số DSA</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-1 text-sm grid grid-cols-2 gap-4 h-fit">
+                        <div class="col-span-2"><label class="block mb-1 font-semibold text-slate-300">H(M):</label><input id="p3-hm" class="w-full p-2.5 rounded-lg glass-input" value=""></div>
+                        <div><label class="block mb-1 font-semibold text-slate-300">Số p:</label><input id="p3-p" class="w-full p-2.5 rounded-lg glass-input" value=""></div>
+                        <div><label class="block mb-1 font-semibold text-slate-300">Số q:</label><input id="p3-q" class="w-full p-2.5 rounded-lg glass-input" value=""></div>
+                        <div><label class="block mb-1 font-semibold text-slate-300">Số h:</label><input id="p3-h" class="w-full p-2.5 rounded-lg glass-input" value=""></div>
+                        <div><label class="block mb-1 font-semibold text-slate-300">Khóa xA:</label><input id="p3-xa" class="w-full p-2.5 rounded-lg glass-input" value=""></div>
+                        <div class="col-span-2"><label class="block mb-1 font-semibold text-slate-300">Số k ngẫu nhiên:</label><input id="p3-k" class="w-full p-2.5 rounded-lg glass-input mb-4" value=""></div>
+                        <button onclick="runP3()" class="col-span-2 w-full bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-400 hover:to-rose-500 border border-pink-400/50 text-white p-3 rounded-lg font-heading font-bold shadow-lg shadow-pink-500/30 transition transform hover:-translate-y-0.5">KÝ TÊN / XÁC MINH</button>
+                    </div>
+                    <div class="md:col-span-2 glass-panel p-4 rounded-xl min-h-[150px]" id="o3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function T(id, btn) {
+            document.querySelectorAll('.tab-content').forEach(e => e.classList.add('hidden-tab'));
+            document.getElementById(id).classList.remove('hidden-tab');
+            document.querySelectorAll('.menu-btn').forEach(b => b.className = "w-full text-left px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800/50 menu-btn transition-all font-heading");
+            btn.className = "w-full text-left px-4 py-3 rounded-xl bg-gradient-to-r from-blue-600/80 to-indigo-600/80 text-white font-medium menu-btn shadow-lg shadow-blue-900/40 transition-all font-heading";
+        }
+        const UI = {
+            card: (t, c) => `<div class="bg-slate-800/60 border-l-4 border-l-blue-500 p-5 mb-5 rounded-lg shadow-md text-sm fade-in"><div class="font-heading font-bold text-blue-400 text-lg mb-3 tracking-wide">${t}</div><div class="text-slate-300">${c}</div></div>`,
+            err: msg => `<div class="p-4 bg-red-900/40 border border-red-500/50 text-red-200 rounded-lg mb-4 font-bold fade-in text-sm"><i class="font-mono">ERROR:</i> ${msg}</div>`,
+            hex: n => n.toString(16).padStart(2, '0'),
+            mat: m => `<div class="inline-grid grid-cols-4 gap-1 p-3 bg-slate-900/80 border border-slate-700 rounded-xl mx-2 align-top mt-2 shadow-inner">` + m.map(row => row.map(v => `<div class="w-9 h-9 flex items-center justify-center rounded bg-slate-800/80 font-mono text-[13px] text-teal-300 border border-slate-700/50 hover:bg-slate-700">${UI.hex(v)}</div>`).join('')).join('') + `</div>`
+        };
+
+        function runP1() {
+            let pt = document.getElementById('p1-text').value.replace(/\s+/g, ''); let ks = document.getElementById('p1-key').value.trim();
+            if(!pt || !ks) return document.getElementById('o1').innerHTML = UI.err("Vui lòng điền đủ.");
+            let keyStr = ks.split(',').map(s => parseInt(s.trim())); let pad = document.getElementById('p1-pad').value || 'X';
+            if(keyStr.some(isNaN)) return document.getElementById('o1').innerHTML = UI.err("Khóa không hợp lệ.");
+            let n = keyStr.length, padLen = (n - (pt.length % n)) % n, pText = pt + pad.repeat(padLen), rows = pText.length / n;
+            let m = []; for(let i=0; i<rows; i++) m.push(pText.substr(i*n, n).split(''));
+            let tbl = `<table class="border-collapse border border-slate-600 text-center mb-4"><tr class="bg-indigo-900/40 text-xs">`;
+            for(let c=0; c<n; c++) tbl += `<th class="border border-slate-700 p-3">Col ${c+1}<br><span class="text-rose-400 block mt-1">K:${keyStr[c]}</span></th>`;
+            tbl += `</tr>`; for(let r=0; r<rows; r++) { tbl += `<tr>`; for(let c=0; c<n; c++) tbl += `<td class="border border-slate-700 p-2 font-mono text-emerald-300">${m[r][c]}</td>`; tbl += `</tr>`; } tbl += `</table>`;
+            let order = keyStr.map((val, idx) => ({val, idx})).sort((a,b) => a.val - b.val);
+            let cipher = ""; for(let o of order) for(let r=0; r<rows; r++) cipher += m[r][o.idx];
+            document.getElementById('o1').innerHTML = UI.card("1. Chuỗi", `Bản rõ: ${pText}`) + UI.card("2. Ma Trận", tbl) + UI.card("3. Bản mã", `<div class="bg-slate-900 border p-4 text-emerald-400 font-mono text-xl">${cipher}</div>`);
+        }
+
+        const gcd = (a, b) => b === 0n ? a : gcd(b, a % b);
+        function phi(n) { let res = n, f = []; for(let p=2n; p*p<=n; p++){ if(n%p===0n){ f.push(p); while(n%p===0n) n/=p; res-=res/p; } } if(n>1n){ f.push(n); res-=res/n; } return {phi: res, f: f}; }
+        function runP2() {
+            let iv1=document.getElementById('p2-a').value, iv2=document.getElementById('p2-m').value, iv3=document.getElementById('p2-n').value;
+            if(!iv1 || !iv2 || !iv3) return document.getElementById('o2').innerHTML = UI.err("Vui lòng điền đủ.");
+            let a = BigInt(iv1), ms = BigInt(iv2), n = BigInt(iv3), html = "", g = gcd(a, n), ph = phi(n), m_pr = ms;
+            if (g === 1n && ms >= ph.phi) { m_pr = ms % ph.phi; html += UI.card("Euler", `φ(${n}) = ${ph.phi}<br>m' = ${ms} mod ${ph.phi} = ${m_pr}`); }
+            let bin = m_pr.toString(2), bArr = bin.split('').reverse(), r=1n, base=a%n;
+            let hist = `<table class="w-full border-collapse text-sm mt-4"><tr><th class="border p-2">Bit</th><th class="border p-2">Kết quả</th></tr>`;
+            for(let i=0; i<bArr.length; i++){ if(bArr[i] === '1') r=(r*base)%n; if(i < bArr.length-1) base=(base*base)%n; hist += `<tr><td class="border p-2 text-rose-400">${bArr[i]}</td><td class="border p-2">R=${r}, B=${base}</td></tr>`; } hist += `</table>`;
+            html += UI.card("Bình Phương Nhân", hist) + `<div class="p-5 text-center text-3xl font-bold bg-blue-900 border">${r}</div>`;
+            document.getElementById('o2').innerHTML = html;
+        }
+
+        function modInv(a, m) {
+            let [m0, y, x] = [m, 0n, 1n];
+            if (m === 1n) return 0n;
+            while (a > 1n) { let q = a / m; let t = m; m = a % m; a = t; t = y; y = x - q * y; x = t; }
+            if (x < 0n) x += m0; return x;
+        }
+        const bModPow = (b, e, mod) => {
+            let r=1n; b = (b%mod+mod)%mod;
+            while(e>0n) { if(e%2n===1n) r=(r*b)%mod; e/=2n; b=(b*b)%mod; } return r;
+        };
+
+        function runP3() {
+            try {
+                let vars = ['hm', 'p', 'q', 'h', 'xa', 'k'].map(id => document.getElementById('p3-'+id).value);
+                let O = document.getElementById('o3');
+                if(vars.some(v => !v)) return O.innerHTML = UI.err("Hãy nhập đủ tất cả các biến số.");
+                let [H, p, q, h, xa, k] = vars.map(BigInt);
+                
+                let g = bModPow(h, (p-1n)/q, p); let ya = bModPow(g, xa, p);
+                let html = UI.card("1. Sinh Khóa (Key Gen)", `g = h<sup>(p-1)/q</sup> mod p = <b class="text-teal-300">${g}</b><br>yA = g<sup>xA</sup> mod p = <b class="text-indigo-400">${ya}</b>`);
+
+                let r = bModPow(g, k, p) % q;
+                let kInv = modInv(k, q);
+                let s = (kInv * ((H + xa*r)%q)) % q; if(s<0n) s = (s+q)%q;
+                html += UI.card("2. Tạo Chữ Ký (Signing)", `r = (g<sup>k</sup> mod p) mod q = <b class="text-rose-400">${r}</b><br>k<sup>-1</sup> mod q = <b>${kInv}</b><br>s = <b class="text-rose-400">${s}</b><br><div class="mt-3 bg-slate-900 border border-slate-700 p-3 rounded font-mono shadow-inner">Chữ ký: (${r}, ${s})</div>`);
+
+                let w = modInv(s, q);
+                let u1 = (H * w) % q; if(u1<0n) u1=(u1+q)%q;
+                let u2 = (r * w) % q; if(u2<0n) u2=(u2+q)%q;
+                let v = (bModPow(g, u1, p) * bModPow(ya, u2, p) % p) % q;
+                
+                let check = (v === r);
+                html += UI.card("3. Xác Minh", `w=${w}<br>u1=${u1}, u2=${u2}<br>v = <b class="text-indigo-400">${v}</b><br><div class="p-4 mt-4 border-2 rounded-xl text-lg font-bold text-center ${check ? 'border-emerald-500/50 bg-emerald-900/40 text-emerald-300': 'border-rose-500/50 bg-rose-900/40 text-rose-300'}">v=${v} ${check?'==':'!='} r=${r} ➔ ${check?'HỢP LỆ':'TỪ CHỐI'}</div>`);
+                
+                O.innerHTML = html;
+            } catch(e) { document.getElementById('o3').innerHTML = UI.err(e); }
+        }
+
+        const SBOX=[99,124,119,123,242,107,111,197,48,1,103,43,254,215,171,118,202,130,201,125,250,89,71,240,173,212,162,175,156,164,114,192,183,253,147,38,54,63,247,204,52,165,229,241,113,216,49,21,4,199,35,195,24,150,5,154,7,18,128,226,235,39,178,117,9,131,44,26,27,110,90,160,82,59,214,179,41,227,47,132,83,209,0,237,32,252,177,91,106,203,190,57,74,76,88,207,208,239,170,251,67,77,51,133,69,249,2,127,80,60,159,168,81,163,64,143,146,157,56,245,188,182,218,33,16,255,243,210,205,12,19,236,95,151,68,23,196,167,126,61,100,93,25,115,96,129,79,220,34,42,144,136,70,238,184,20,222,94,11,219,224,50,58,10,73,6,36,92,194,211,172,98,145,149,228,121,231,200,55,109,141,213,78,169,108,86,244,234,101,122,174,8,186,120,37,46,28,166,180,198,232,221,116,31,75,189,139,138,112,62,181,102,72,3,246,14,97,53,87,185,134,193,29,158,225,248,152,17,105,217,142,148,155,30,135,233,206,85,40,223,140,161,137,13,191,230,66,104,65,153,45,15,176,84,187,22];
+        const RCON=[0,1,2,4,8,16,32,64,128,27,54];
+        
+        function runP4() {
+            try {
+                let pt = document.getElementById('p4-pt').value.replace(/\s+/g, '');
+                let ks = document.getElementById('p4-key').value.replace(/\s+/g, '');
+                let O = document.getElementById('o4');
+                if(pt.length !== 32 || ks.length !== 32) throw "Độ dài phải đúng 32 ký tự HEX.";
+                
+                let state=[]; for(let r=0;r<4;r++){ state[r]=[]; for(let c=0;c<4;c++) state[r].push(parseInt(pt.substring((c*4+r)*2, (c*4+r)*2+2), 16)); }
+                let kArr=[]; for(let i=0;i<16;i++) kArr.push(parseInt(ks.substring(i*2, i*2+2), 16));
+                
+                let w=[]; for(let i=0;i<4;i++) w.push([kArr[4*i], kArr[4*i+1], kArr[4*i+2], kArr[4*i+3]]);
+                for(let i=4;i<44;i++){
+                    let tm=[...w[i-1]];
+                    if(i%4===0) { let f = tm.shift(); tm.push(f); tm = tm.map(x=>SBOX[x]); tm[0]^=RCON[i/4]; }
+                    w.push(w[i-4].map((v,id)=>v^tm[id]));
+                }
+                
+                let rKeys=[]; for(let r=0;r<=10;r++){ let rm=[[],[],[],[]]; for(let c=0;c<4;c++) for(let ro=0;ro<4;ro++) rm[ro][c] = w[r*4+c][ro]; rKeys.push(rm); }
+
+                const A_R = (s,k) => s.map((ro,r) => ro.map((v,c) => v^k[r][c]));
+                const S_B = s => s.map(ro => ro.map(v => SBOX[v]));
+                const S_R = s => [ [...s[0]], [s[1][1],s[1][2],s[1][3],s[1][0]], [s[2][2],s[2][3],s[2][0],s[2][1]], [s[3][3],s[3][0],s[3][1],s[3][2]] ];
+                const M2 = x => ((x<<1)^((x&0x80)?0x1b:0))&0xff; const M3 = x => M2(x)^x;
+                const M_C = s => {
+                    let r=[[],[],[],[]];
+                    for(let c=0;c<4;c++){
+                        r[0][c] = M2(s[0][c])^M3(s[1][c])^s[2][c]^s[3][c];
+                        r[1][c] = s[0][c]^M2(s[1][c])^M3(s[2][c])^s[3][c];
+                        r[2][c] = s[0][c]^s[1][c]^M2(s[2][c])^M3(s[3][c]);
+                        r[3][c] = M3(s[0][c])^s[1][c]^s[2][c]^M2(s[3][c]);
+                    } return r;
+                };
+
+                let html = UI.card("Sinh Khóa", "Thành công 44 Words.");
+                html += UI.card(`Round 0`, `<div class="flex gap-4 items-center">PT: ${UI.mat(state)} ⊕ RK: ${UI.mat(rKeys[0])}</div>`);
+                state = A_R(state, rKeys[0]);
+
+                for(let ro=1; ro<=10; ro++){
+                    state = S_B(state); let rb = `<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2"><div>SB${UI.mat(state)}</div>`;
+                    state = S_R(state); rb += `<div>SR${UI.mat(state)}</div>`;
+                    if(ro<10){ state = M_C(state); rb += `<div>MC${UI.mat(state)}</div>`; }
+                    state = A_R(state, rKeys[ro]); rb += `<div>ARK${UI.mat(state)}</div></div>`;
+                    html += UI.card(`Round ${ro}`, rb);
+                }
+                
+                let cipherHex=""; for(let c=0;c<4;c++) for(let ro=0;ro<4;ro++) cipherHex += UI.hex(state[ro][c]);
+                html += `<div class="p-6 bg-violet-900 rounded-xl text-center shadow-xl text-white font-mono break-all font-bold text-2xl tracking-widest">${cipherHex}</div>`;
+                
+                O.innerHTML = html;
+            }catch(e) { document.getElementById('o4').innerHTML = UI.err(e); }
+        }
+
+        /* ======= BÀI 5: MÃ HÓA BẤT ĐỐI XỨNG ======= */
+        function calcDH() {
+            try {
+                let vars = ['q', 'a', 'xa', 'xb'].map(id => document.getElementById('dh-'+id).value);
+                let O = document.getElementById('o-dh');
+                if(vars.some(v => !v)) return O.innerHTML = UI.err("Vui lòng nhập đủ q, a, xA, xB.");
+                let [q, a, xa, xb] = vars.map(BigInt);
+
+                let ya = bModPow(a, xa, q);
+                let yb = bModPow(a, xb, q);
+                
+                let k_a = bModPow(yb, xa, q);
+                let k_b = bModPow(ya, xb, q);
+
+                let html = UI.card("1. Tính Khóa Công Khai", `Khóa công khai của An: yA = a<sup>xA</sup> mod q = <b>${ya}</b><br>Khóa công khai của Ba: yB = a<sup>xB</sup> mod q = <b>${yb}</b>`);
+                
+                let check = k_a === k_b;
+                html += UI.card("2. Tính Khóa Phiên (K)", `
+                <div class="grid grid-cols-2 gap-4 text-center mb-3">
+                    <div class="bg-slate-900/50 p-3 rounded border border-slate-700/50">
+                        <div class="text-slate-400 text-xs mb-1">K phía An (K = yB<sup>xA</sup> mod q)</div>
+                        <div class="font-mono text-xl text-orange-400 font-bold">${k_a}</div>
+                    </div>
+                    <div class="bg-slate-900/50 p-3 rounded border border-slate-700/50">
+                        <div class="text-slate-400 text-xs mb-1">K phía Ba (K = yA<sup>xB</sup> mod q)</div>
+                        <div class="font-mono text-xl text-orange-400 font-bold">${k_b}</div>
+                    </div>
+                </div>
+                <div class="text-center font-bold px-3 py-2 rounded shadow-inner ${check ? 'bg-emerald-900/40 text-emerald-400 border border-emerald-500/30' : 'bg-rose-900/40 text-rose-400 border border-rose-500/30'}">
+                    ${check ? '✔ Hai bên đồng thuận ra cùng một khóa phiên K' : '❌ Lỗi: Khóa phiên không khớp!'}
+                </div>
+                `);
+                O.innerHTML = html;
+            } catch(e) { document.getElementById('o-dh').innerHTML = UI.err(e); }
+        }
+
+        function calcRSA() {
+            try {
+                let vars = ['p', 'q', 'e', 'mc'].map(id => document.getElementById('rsa-'+id).value);
+                let mode = document.getElementById('rsa-mode').value;
+                let O = document.getElementById('o-rsa');
+                if(vars.some(v => !v)) return O.innerHTML = UI.err("Vui lòng nhập đủ p, q, e và M/C.");
+                let [p, q, e, mc] = vars.map(BigInt);
+
+                let n = p * q;
+                let phi_n = (p - 1n) * (q - 1n);
+                let d = modInv(e, phi_n);
+
+                let html = UI.card("1. Tính toán Khóa RSA", `
+                n = p × q = <b>${n}</b><br>
+                φ(n) = (p-1) × (q-1) = <b>${phi_n}</b><br>
+                Tính khóa riêng d = e<sup>-1</sup> mod φ(n) = <b>${d}</b><br>
+                <div class="mt-3 bg-slate-900/60 p-3 rounded border border-slate-700 font-mono text-yellow-300 text-sm shadow-inner">PU = {${e}, ${n}} \xA0|\xA0 PR = {${d}, ${n}}</div>
+                `);
+
+                if (mode === 'enc') {
+                    let C = bModPow(mc, e, n); 
+                    let M_dec = bModPow(C, d, n);
+                    html += UI.card("2. Mã hóa & Mô phỏng Giải mã", `
+                    Đầu vào Bản rõ: <b>M = ${mc}</b><br>
+                    Bản mã: C = M<sup>e</sup> mod n = ${mc}<sup>${e}</sup> mod ${n} = <b class="text-amber-400 text-2xl font-mono block mt-1">${C}</b><br>
+                    Kiểm tra giải mã lại: M' = C<sup>d</sup> mod n = ${C}<sup>${d}</sup> mod ${n} = <b class="text-emerald-400 text-xl">${M_dec}</b>
+                    `);
+                } else {
+                    let S = bModPow(mc, d, n);
+                    let M_ver = bModPow(S, e, n);
+                    html += UI.card("2. Tạo Chữ Ký & Mô phỏng Xác minh", `
+                    Đầu vào Bản tin: <b>M/H(M) = ${mc}</b><br>
+                    Ký hiệu: S = M<sup>d</sup> mod n = ${mc}<sup>${d}</sup> mod ${n} = <b class="text-amber-400 text-2xl font-mono block mt-1">${S}</b><br>
+                    Phục hồi để xác minh: M' = S<sup>e</sup> mod n = ${S}<sup>${e}</sup> mod ${n} = <b class="text-emerald-400 text-xl">${M_ver}</b>
+                    `);
+                }
+                O.innerHTML = html;
+            } catch(e) { document.getElementById('o-rsa').innerHTML = UI.err(e); }
+        }
+
+        function calcElGamal() {
+            try {
+                let q_val = document.getElementById('el-q').value,
+                    a_val = document.getElementById('el-a').value,
+                    xa_val = document.getElementById('el-xa').value;
+                let O = document.getElementById('o-el');
+                
+                if(!q_val || !a_val || !xa_val) return O.innerHTML = UI.err("Cần phải có đủ Nhóm khóa chung (q, a) và Khóa riêng An (xA).");
+                
+                let q = BigInt(q_val), a = BigInt(a_val), xa = BigInt(xa_val);
+                let ya = bModPow(a, xa, q);
+                let html = UI.card("1. Khóa Phía An (Người Nhận)", `Tính khóa công khai yA = a<sup>xA</sup> mod q = <b class="text-lime-300 font-mono text-xl">${ya}</b>`);
+
+                let m_val = document.getElementById('el-m').value;
+                let k_val = document.getElementById('el-k').value;
+                let c_val = document.getElementById('el-c').value;
+
+                if (m_val && k_val) {
+                    let M = BigInt(m_val), k = BigInt(k_val);
+                    let K = bModPow(ya, k, q);
+                    let C1 = bModPow(a, k, q);
+                    let C2 = (K * M) % q;
+                    
+                    html += UI.card("2. Phía Ba (Gửi Mã Hóa tới An)", `
+                    Khóa phiên K = yA<sup>k</sup> mod q = <b>${K}</b><br>
+                    Tính C1 = a<sup>k</sup> mod q = <b>${C1}</b><br>
+                    Tính C2 = K × M mod q = <b>${C2}</b><br>
+                    <div class="mt-3 bg-slate-900/60 p-3 shadow-inner border border-slate-700 text-center font-mono rounded">Bản mã gửi đi: <b class="text-lime-400 text-xl">(${C1}, ${C2})</b></div>
+                    `);
+                } 
+                
+                if (c_val) {
+                    let parts = c_val.split(',').map(x => x.trim());
+                    if (parts.length === 2 && parts[0] && parts[1]) {
+                        let C1 = BigInt(parts[0]), C2 = BigInt(parts[1]);
+                        let K = bModPow(C1, xa, q);
+                        let K_inv = modInv(K, q);
+                        let M = (C2 * K_inv) % q;
+                        
+                        html += UI.card("3. Phía An (Giải Mã)", `
+                        Phục hồi K = C1<sup>xA</sup> mod q = <b>${K}</b><br>
+                        Tính nghịch đảo K<sup>-1</sup> mod q = <b>${K_inv}</b><br>
+                        Bản rõ M = C2 × K<sup>-1</sup> mod q = <b class="text-lime-400 font-mono text-2xl block mt-1">${M}</b>
+                        `);
+                    } else {
+                        html += UI.err("Định dạng C1, C2 không đúng. Xin nhập dạng mảng, ví dụ: 15, 23");
+                    }
+                }
+                
+                if(!m_val && !k_val && !c_val) {
+                    html += UI.card("Trạng thái", "Nhập M, k để chạy Mã hóa <strong class='text-lime-300'>hoặc</strong> nhập C1, C2 để chạy Giải mã.");
+                }
+
+                O.innerHTML = html;
+            } catch(e) { document.getElementById('o-el').innerHTML = UI.err("Lỗi xử lý, bạn kiểm tra lại số liệu."); }
+        }
+    </script>
+</body>
+</html>
